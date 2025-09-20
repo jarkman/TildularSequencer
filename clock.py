@@ -71,7 +71,8 @@ class Clock():
             # draw a circle
             ctx.rgb(120, 234, 0).arc(0,0, 60, 0, 2 * math.pi, True).fill()
       
-        ctx.rgb(1,0,0).move_to(-80,0).text(repr(self.beatInterval))
+        bpm = 60.0/self.beatInterval
+        ctx.rgb(1,0,0).move_to(-80,0).text(repr(int(bpm)))
         
         
 
