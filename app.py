@@ -15,6 +15,20 @@ from .sequencer import Sequencer
 from .clock import Clock
 from .turing import Turing
 
+import sequencerHexpansion
+
+
+# to simulate, 
+# cd C:\Tildagon\badge-2024-software\sim
+# pipenv run python run.py
+
+# deploy to badge: https://tildagon.badge.emfcamp.org/tildagon-apps/run-on-badge/
+# seem to need to do each file individually?
+
+
+# TODO - copy update strategy from https://github.com/MatthewWilkes/md-updater/blob/main/sega.py
+
+
 main_menu_items = ["Clock", "Sequencer", "Turing"]
 
 
@@ -35,8 +49,10 @@ class TildularSequencer(app.App):
         eventbus.emit(PatternDisable())
         tildagonos.set_led_power(True)
 
-        self.clock = Clock(self)
-        self.sequencer = Sequencer(self)
+        self.sequencerHexpansion = SequencerHexpansion()
+
+        self.clock = Clock(self, self.sequencerHexpansion)
+        self.sequencer = Sequencer(self, self.sequencerHexpansion)
         self.turing = Turing(self)
 
         self.activeMode = self.sequencer
@@ -80,7 +96,7 @@ class TildularSequencer(app.App):
         self.menuActive = False
 
     # apparently not called when app is minimised?
-    def background_update(self):
+    async def background_update(self):
 
         print("background update")
 
@@ -90,6 +106,8 @@ class TildularSequencer(app.App):
 
         self.lastBackgroundUpdate = now
         
+        self.sequencerHexpansion.update(delta)
+
         self.clock.background_update(delta)
 
         self.activeMode.background_update(delta)
@@ -110,7 +128,7 @@ class TildularSequencer(app.App):
                     #print("cancel showing menu")
                     self.menuActive = True
 
-
+            self.sequencerHexpansion.update(delta)
             self.clock.update(delta)
             self.activeMode.update(delta)
 

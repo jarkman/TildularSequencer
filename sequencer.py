@@ -10,6 +10,8 @@ from tildagonos import tildagonos
 from system.eventbus import eventbus
 from system.patterndisplay.events import PatternDisable
 
+import sequencerHexpansion
+
 class Sequencer():
 
     beatInterval = 0.5 #seconds
@@ -19,14 +21,21 @@ class Sequencer():
     sweepPos = 0.0 # float, goes from 0 to numBeats as time goes by
     fractionOfBeat = 0
 
-    def __init__(self, app):
+    def __init__(self, app, sequencerHexpansion):
         super().__init__()
         self.app = app
+        self.sequencerHexpansion = sequencerHexpansion
+        self.notes = []
+        for n in range(self.maxBeats):
+            self.notes.append(3.3 * n/self.maxBeats) # initialise with an arpeggio
+
         
 
     def update(self, delta):
         #self.updateLEDs()
 
+        self.background_update(delta)
+        
         return True
     
         
@@ -35,7 +44,16 @@ class Sequencer():
         if self.sweepPos > self.numBeats:
             self.sweepPos = self.sweepPos - self.numBeats
 
-        self.beat = math.floor(self.sweepPos)
+        newBeat = math.floor(self.sweepPos)
+
+        if newBeat != self.beat:
+            if self.notes[newBeat] > 0.0:
+                # emit new note
+                self.sequencerHexpansion.writeCV(self.sequencerHexpansion.DACSlots.CV1, newBeat, self.notes[newBeat])
+                self.sequencerHexpansion.startPulse(self.sequencerHexpansion.DACSlots.GATE1)
+
+            
+        self.beat = newBeat
         
         self.fractionOfBeat = self.sweepPos % 1.0
 

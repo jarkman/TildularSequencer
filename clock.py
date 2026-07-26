@@ -10,15 +10,22 @@ from tildagonos import tildagonos
 from system.eventbus import eventbus
 from system.patterndisplay.events import PatternDisable
 
+import sequencerHexpansion
+
+
+#note clock rate controlled with up & down buttons
+# could maybe do this from the joystick/touchpads?
+
 class Clock():
 
     beatInterval = 1.0 #seconds
     
     fractionOfBeat = 0
 
-    def __init__(self, app):
+    def __init__(self, app, sequencerHexpansion):
         super().__init__()
         self.app = app
+        self.sequencerHexpansion = sequencerHexpansion
         
 
     def update(self, delta):
@@ -42,7 +49,8 @@ class Clock():
         self.fractionOfBeat = self.fractionOfBeat % 1.0
 
         if old > self.fractionOfBeat:
-            pass  #emit a pulse
+            self.sequencerHexpansion.startPulse(self.sequencerHexpansion.DACSlots.CLOCK)
+            #emit a pulse
 
     
 
