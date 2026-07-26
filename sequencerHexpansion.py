@@ -12,8 +12,6 @@ MCP4728_ADDRS = tuple(range(0x60, 0x68))
 ADC_LABELS = ("Pot A", "Range", "CLK IN", "RST IN")
 DAC_LABELS = ("CV1", "Gate1", "CV2", "Gate2")
 
-ADCSlots = Enum("ADCPorts", [("Pitch",0), ("Speed",1), ("ClockIn", 2), ("ResetIn",3)])
-DACSlots = Enum("DACPorts", [("CV1",0), ("Gate1",1), ("CV2", 2), ("Gate2",3)])
 
 ADS_FSR_VOLTS = 4.096
 ADS_PGA_4V096 = 0x0200
@@ -114,6 +112,9 @@ class SequencerHexpansion():
         self.dac = [0] * 4
         self.pulseEndTime = [0] * 4
         self.dac_step = 0
+
+        self.ADCSlots = Enum("ADCPorts", [("Pitch",0), ("Speed",1), ("ClockIn", 2), ("ResetIn",3)])
+        self.DACSlots = Enum("DACPorts", [("CV1",0), ("Gate1",1), ("CV2", 2), ("Gate2",3)])
 
         self.last_adc_ms = 0
         self.last_dac_ms = 0

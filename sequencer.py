@@ -10,7 +10,7 @@ from tildagonos import tildagonos
 from system.eventbus import eventbus
 from system.patterndisplay.events import PatternDisable
 
-import sequencerHexpansion
+#import sequencerHexpansion
 
 class Sequencer():
 
@@ -35,7 +35,7 @@ class Sequencer():
         #self.updateLEDs()
 
         self.background_update(delta)
-        
+
         return True
     
         
@@ -49,8 +49,8 @@ class Sequencer():
         if newBeat != self.beat:
             if self.notes[newBeat] > 0.0:
                 # emit new note
-                self.sequencerHexpansion.writeCV(self.sequencerHexpansion.DACSlots.CV1, newBeat, self.notes[newBeat])
-                self.sequencerHexpansion.startPulse(self.sequencerHexpansion.DACSlots.GATE1)
+                self.sequencerHexpansion.writeCV(self.sequencerHexpansion.DACSlots.CV1, self.notes[newBeat])
+                self.sequencerHexpansion.startPulse(self.sequencerHexpansion.DACSlots.Gate1)
 
             
         self.beat = newBeat

@@ -8,6 +8,7 @@ from events.input import Buttons, BUTTON_TYPES
  
 from app_components import Menu, Notification, clear_background
 
+from .sequencerHexpansion import SequencerHexpansion
 from tildagonos import tildagonos
 from system.eventbus import eventbus
 from system.patterndisplay.events import PatternDisable
@@ -15,7 +16,7 @@ from .sequencer import Sequencer
 from .clock import Clock
 from .turing import Turing
 
-import sequencerHexpansion
+#import sequencerHexpansion
 
 
 # to simulate, 

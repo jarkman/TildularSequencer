@@ -10,7 +10,7 @@ from tildagonos import tildagonos
 from system.eventbus import eventbus
 from system.patterndisplay.events import PatternDisable
 
-import sequencerHexpansion
+#import sequencerHexpansion
 
 
 #note clock rate controlled with up & down buttons
