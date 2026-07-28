@@ -186,8 +186,8 @@ class SequencerHexpansion():
             if self.pulseEndTime[slot] > 0 and self.pulseEndTime[slot] < now:
 
                 try:
-                    dac_code = dac_code(0.0)
-                    self.dac[slot] = dac_code
+                    code = dac_code(0.0)
+                    self.dac[slot] = code
                     write_dac(self.i2c, self.dac_addr, self.dac)
                     self.pulseEndTime[slot] = 0
 
