@@ -6,6 +6,7 @@ import math
 
 from events.input import Buttons, BUTTON_TYPES
 from app_components import clear_background
+from .sequencerHexpansion import DACSlots
 from tildagonos import tildagonos
 from system.eventbus import eventbus
 from system.patterndisplay.events import PatternDisable
@@ -27,7 +28,7 @@ class Sequencer():
         self.sequencerHexpansion = sequencerHexpansion
         self.notes = []
         for n in range(self.maxBeats):
-            self.notes.append(3.3 * n/self.maxBeats) # initialise with an arpeggio
+            self.notes.append((3.3 * n)/self.maxBeats) # initialise with an arpeggio
 
         
 
@@ -49,8 +50,9 @@ class Sequencer():
         if newBeat != self.beat:
             if self.notes[newBeat] > 0.0:
                 # emit new note
-                self.sequencerHexpansion.writeCV(self.sequencerHexpansion.DACSlots.CV1, self.notes[newBeat])
-                self.sequencerHexpansion.startPulse(self.sequencerHexpansion.DACSlots.Gate1)
+                print("new note4 " + repr(self.notes[newBeat])+ " V")
+                self.sequencerHexpansion.writeCV(DACSlots.CV1, self.notes[newBeat])
+                self.sequencerHexpansion.startPulse(DACSlots.Gate1)
 
             
         self.beat = newBeat

@@ -3,7 +3,6 @@ import app
 from app_components import clear_background
 from events.input import Buttons, BUTTON_TYPES
 from time import sleep_ms, ticks_diff, ticks_ms
-from enum import Enum
 
 
 ADS1015_ADDR = 0x48
@@ -99,6 +98,18 @@ def read_adc_volts(i2c, channel):
     raw = read_adc_raw(i2c, channel)
     return raw, raw * ADS_FSR_VOLTS / 2048
 
+class ADCSlots:
+    Pitch = 0
+    Speed = 1
+    ClockIn = 2
+    ResetIn = 3
+
+class DACSlots:
+    CV1 = 0
+    Gate1 = 1
+    CV2 = 2
+    Gate2 = 3
+
 
 class SequencerHexpansion():
     def __init__(self, config=None):
@@ -113,9 +124,7 @@ class SequencerHexpansion():
         self.pulseEndTime = [0] * 4
         self.dac_step = 0
 
-        self.ADCSlots = Enum("ADCPorts", [("Pitch",0), ("Speed",1), ("ClockIn", 2), ("ResetIn",3)])
-        self.DACSlots = Enum("DACPorts", [("CV1",0), ("Gate1",1), ("CV2", 2), ("Gate2",3)])
-
+        
         self.last_adc_ms = 0
         self.last_dac_ms = 0
         self.last_port_ms = 0
@@ -127,29 +136,51 @@ class SequencerHexpansion():
         else:
             self.refresh_port()
 
+    def gotHexpansion(self):
+        return self.port != None
+    
     def writeCV(self, slot, volts):
-        #value is a float 0-1
+
+        if self.dac_addr is None:
+            print("writeCV - no DAC")
+            return
+
+        #value is a float 0-3.3
+        print("writeCV volts " + repr(volts))
         try:
-            dac_code = dac_code(volts)
-            self.dac[slot] = dac_code
+            code = dac_code(volts)
+            print("dacCode " + repr(code))
+            self.dac[slot] = code
+            print("slot val " + repr(self.dac[slot]))
             write_dac(self.i2c, self.dac_addr, self.dac)
-        except Exception:
-            self.dac_addr = None
+        except Exception as e:
+            #self.dac_addr = None
+            print("writeCV exception "+ repr(e))
 
     def startPulse(self, slot):
+
+        if self.dac_addr is None:
+            print("startPulse - no DAC")
+            return
         
         try:
-            dac_code = dac_code(3.3)
-            self.dac[slot] = dac_code
+            code = dac_code(3.3)
+            self.dac[slot] = code
             write_dac(self.i2c, self.dac_addr, self.dac)
             self.pulseEndTime[slot] = ticks_ms() + 100
 
         
-        except Exception:
-            self.dac_addr = None
+        except Exception as e:
+            #self.dac_addr = None
+            print("startPulse exception "+ repr(e))
 
     def endPulses(self):
         # see if it's time to stop any pulses
+
+        if self.dac_addr is None:
+            print("endPulses - no DAC")
+            return
+
         now = ticks_ms()
         for slot in range(4):
             if self.pulseEndTime[slot] > 0 and self.pulseEndTime[slot] < now:
@@ -161,8 +192,9 @@ class SequencerHexpansion():
                     self.pulseEndTime[slot] = 0
 
                 
-                except Exception:
-                    self.dac_addr = None
+                except Exception as e:
+                     #self.dac_addr = None
+                    print("endPulses exception "+ repr(e))
 
 
     def refresh_port(self):

@@ -152,6 +152,8 @@ class TildularSequencer(app.App):
             #print("draw uiMode")
             self.uiMode.draw(ctx)
         
+        if not self.sequencerHexpansion.gotHexpansion():
+            ctx.rgb(1,0,0).move_to(-80,0).text("No hexpansion!")
             
         
 
