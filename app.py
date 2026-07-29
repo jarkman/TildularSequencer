@@ -53,7 +53,7 @@ class TildularSequencer(app.App):
         self.sequencerHexpansion = SequencerHexpansion()
 
         self.clock = Clock(self, self.sequencerHexpansion)
-        self.sequencer = Sequencer(self, self.sequencerHexpansion)
+        self.sequencer = Sequencer(self, self.sequencerHexpansion, self.button_states)
         self.turing = Turing(self)
 
         self.activeMode = self.sequencer

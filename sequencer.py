@@ -22,10 +22,12 @@ class Sequencer():
     sweepPos = 0.0 # float, goes from 0 to numBeats as time goes by
     fractionOfBeat = 0
 
-    def __init__(self, app, sequencerHexpansion):
+    def __init__(self, app, sequencerHexpansion, buttonStates):
         super().__init__()
         self.app = app
         self.sequencerHexpansion = sequencerHexpansion
+        self.buttonStates = buttonStates
+        self.selectedNote = -1
         self.notes = []
         for n in range(self.maxBeats):
             self.notes.append((3.3 * n)/self.maxBeats) # initialise with an arpeggio
@@ -36,6 +38,21 @@ class Sequencer():
         #self.updateLEDs()
 
         self.background_update(delta)
+
+        if self.buttonStates.get("TOUCH01"):
+            self.selectedNote = 0
+        elif self.buttonStates.get("TOUCH03"):
+            self.selectedNote = 1
+        elif self.buttonStates.get("TOUCH05"):
+            self.selectedNote = 2
+        elif self.buttonStates.get("TOUCH07"):
+            self.selectedNote = 3
+        elif self.buttonStates.get("TOUCH09"):
+            self.selectedNote = 4
+        elif self.buttonStates.get("TOUCH11"):
+            self.selectedNote = 5
+        else:
+            self.selectedNote = -1        
 
         return True
     
@@ -110,34 +127,51 @@ class Sequencer():
         ctx.stroke()
 
         blobRadius = 110
-        bigBlobSize = 20
-        smallBlobSize = 10
+        if self.selectedNote >= 0:
+            bigBlobSize = 50
+        else:
+            bigBlobSize = 20
+
         dotSize = 2
 
         for b in range(0,self.maxBeats):
             r = 255
-            if b == self.beat:
+            if b == self.selectedNote:
                 #fill
-                size = self.fmap(self.fractionOfBeat, 0.0, 1.0, bigBlobSize, smallBlobSize)
+                size = self.fmap(self.fractionOfBeat, 0.0, 1.0, bigBlobSize*2.0, bigBlobSize*2.0/2.0)
+                r = int(self.fmap(self.fractionOfBeat, 0.0, 1.0, 0, 255))
+                fill = True
+            elif b == self.beat:
+                #fill
+                size = self.fmap(self.fractionOfBeat, 0.0, 1.0, bigBlobSize, bigBlobSize/2.0)
                 r = int(self.fmap(self.fractionOfBeat, 0.0, 1.0, 0, 255))
                 fill = True
             elif b < self.numBeats:
                 #empty
-                size = smallBlobSize
-                fill = False
+                size = bigBlobSize/2.0
+                fill = True
             else:
                 #dot
                 size = dotSize
                 fill = False
+
+            if b < self.numBeats:
+                fraction = self.notes[b]/self.sequencerHexpansion.maxVolts
+                if fraction < 0.001:
+                    fill = False # show non-playing notes as empty
+            else:
+                fraction = 0
 
             theta = self.thetaForBeat(b)
 
             x = blobRadius*math.cos(theta)
             y = blobRadius*math.sin(theta)
             if fill:
+                divider = fraction * 2 * math.pi
                 ctx.rgb(r, 234, 0).arc(x,y, size, 0, 2 * math.pi, True).fill()
+                ctx.rgb(0, 234, r).arc(x,y, size*fraction, 0, 2 * math.pi, True).fill()
             else:
-                ctx.rgb(r, 234, 0).arc(x,y, size, 0, 2 * math.pi, True).stroke()
+                ctx.rgb(0, 0, r).arc(x,y, size, 0, 2 * math.pi, True).stroke()
 
         #crosshairs
         #ctx.rgb(0, 1, 0).begin_path()

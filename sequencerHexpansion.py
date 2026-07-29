@@ -20,14 +20,15 @@ ADC_INTERVAL_MS = 100
 DAC_INTERVAL_MS = 700
 PORT_INTERVAL_MS = 2000
 
+MAX_VOLTS = 3.3
 
 def u16_bytes(value):
     return bytes(((value >> 8) & 0xFF, value & 0xFF))
 
 
 def dac_code(volts):
-    volts = max(0, min(3.3, volts))
-    return round(volts * 4095 / 3.3)
+    volts = max(0, min(MAX_VOLTS, volts))
+    return round(volts * 4095 / MAX_VOLTS)
 
 
 def find_inserted_port():
@@ -113,6 +114,7 @@ class DACSlots:
 
 class SequencerHexpansion():
     def __init__(self, config=None):
+        self.maxVolts = MAX_VOLTS
         
         self.port = None
         self.i2c = None
@@ -164,7 +166,7 @@ class SequencerHexpansion():
             return
         
         try:
-            code = dac_code(3.3)
+            code = dac_code(self.maxVolts)
             self.dac[slot] = code
             write_dac(self.i2c, self.dac_addr, self.dac)
             self.pulseEndTime[slot] = ticks_ms() + 100
