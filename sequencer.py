@@ -6,10 +6,11 @@ import math
 
 from events.input import Buttons, BUTTON_TYPES
 from app_components import clear_background
-from .sequencerHexpansion import DACSlots
+from .sequencerHexpansion import DACSlots, ADCSlots
 from tildagonos import tildagonos
 from system.eventbus import eventbus
 from system.patterndisplay.events import PatternDisable
+from frontboards.twentysix import TwentyTwentySix
 
 #import sequencerHexpansion
 
@@ -39,20 +40,40 @@ class Sequencer():
 
         self.background_update(delta)
 
-        if self.buttonStates.get("TOUCH01"):
+        #print(repr(self.buttonStates))
+
+        if TwentyTwentySix.touch_states["TOUCH01"][0]:
             self.selectedNote = 0
-        elif self.buttonStates.get("TOUCH03"):
+        elif TwentyTwentySix.touch_states["TOUCH03"][0]:
             self.selectedNote = 1
-        elif self.buttonStates.get("TOUCH05"):
+        elif TwentyTwentySix.touch_states["TOUCH05"][0]:
             self.selectedNote = 2
-        elif self.buttonStates.get("TOUCH07"):
+        elif TwentyTwentySix.touch_states["TOUCH07"][0]:
             self.selectedNote = 3
-        elif self.buttonStates.get("TOUCH09"):
+        elif TwentyTwentySix.touch_states["TOUCH09"][0]:
             self.selectedNote = 4
-        elif self.buttonStates.get("TOUCH11"):
+        elif TwentyTwentySix.touch_states["TOUCH11"][0]:
             self.selectedNote = 5
         else:
             self.selectedNote = -1        
+
+        # only use odd-numbered LEDs
+        for i in range(0, 12):
+            if i%2 == 0:
+                tildagonos.leds[i+1] = (0, 255, 0) # light up active ones green
+            else:
+                tildagonos.leds[i+1] = (0, 0, 0)
+
+        if self.selectedNote > -1:
+            tildagonos.leds[self.selectedNote*2+1] = (0, 0, 255) # selected one is blue
+
+            # update CV vaue from knob
+            volts = self.sequencerHexpansion.adc[ADCSlots.Pitch][1]
+            print("new note volts " + repr(volts))
+            self.notes[self.selectedNote] = volts
+            
+            
+        tildagonos.leds.write()
 
         return True
     
@@ -67,7 +88,7 @@ class Sequencer():
         if newBeat != self.beat:
             if self.notes[newBeat] > 0.0:
                 # emit new note
-                print("new note4 " + repr(self.notes[newBeat])+ " V")
+                #print("new note4 " + repr(self.notes[newBeat])+ " V")
                 self.sequencerHexpansion.writeCV(DACSlots.CV1, self.notes[newBeat])
                 self.sequencerHexpansion.startPulse(DACSlots.Gate1)
 

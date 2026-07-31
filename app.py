@@ -131,7 +131,8 @@ class TildularSequencer(app.App):
 
             self.sequencerHexpansion.update(delta)
             self.clock.update(delta)
-            self.activeMode.update(delta)
+            
+        self.activeMode.update(delta)
 
         self.background_update()
         
