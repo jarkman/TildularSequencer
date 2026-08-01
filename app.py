@@ -65,8 +65,8 @@ class TildularSequencer(app.App):
         self.sequencer2 = Sequencer(self, self.sequencerHexpansion, 2, self.button_states, self.envelope2)
         self.keyboard1 = Keyboard(self, self.sequencerHexpansion, 1, self.button_states, self.envelope1)
         self.keyboard2 = Keyboard(self, self.sequencerHexpansion, 2, self.button_states, self.envelope2)
-        self.tilt1 = Tilt(self, self.sequencerHexpansion, 1, self.button_states)
-        self.tilt2 = Tilt(self, self.sequencerHexpansion, 2, self.button_states)
+        self.tilt1 = Tilt(self, self.sequencerHexpansion, 1, self.button_states,self.envelope1)
+        self.tilt2 = Tilt(self, self.sequencerHexpansion, 2, self.button_states,self.envelope2)
         
         self.turing = Turing(self)
 
@@ -162,7 +162,7 @@ class TildularSequencer(app.App):
         
         self.activeMode1.background_update(delta)
         self.activeMode2.background_update(delta)
-        
+
         self.envelope1.background_update(delta)
         self.envelope2.background_update(delta)
 

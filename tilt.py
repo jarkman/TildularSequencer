@@ -27,13 +27,17 @@ class Tilt():
     sweepPos = 0.0 # float, goes from 0 to numBeats as time goes by
     fractionOfBeat = 0
 
-    def __init__(self, app, sequencerHexpansion, channel, buttonStates):
+    def __init__(self, app, sequencerHexpansion, channel, buttonStates, envelope):
         super().__init__()
         self.app = app
         self.sequencerHexpansion = sequencerHexpansion
         self.channel = channel
         self.buttonStates = buttonStates
+        self.envelope = envelope
+
         self.selectedNote = 0
+        self.fractionOfBeat = 0
+        self.doEnvelope = False
         self.octave = 0
         self.dirLabel = "---"
 
@@ -49,8 +53,11 @@ class Tilt():
             self.dirLabel = "< >"
         
     def buttonDownHandler(self, event):
-
-        return
+        
+        if JOYSTICK_BUTTON_TYPES["LEFT"] in event.button:
+            self.doEnvelope = False
+        if JOYSTICK_BUTTON_TYPES["RIGHT"] in event.button:
+            self.doEnvelope = True
 
         
     def update(self, delta):
@@ -82,7 +89,20 @@ class Tilt():
         volts = fmap(g, -9.81, 9.81, 0, MAX_VOLTS)
 
         self.sequencerHexpansion.writeCV(self.DACSlot, volts)
-        self.sequencerHexpansion.writeCV(self.GateSlot, MAX_VOLTS)
+
+        if self.doEnvelope:
+            oldF = self.fractionOfBeat
+
+            self.fractionOfBeat = self.app.clock.fractionOfBeat
+
+            #print(" tilt fob %f oldF %f"%(self.fractionOfBeat, oldF))
+
+            if oldF > self.fractionOfBeat:
+                #print(" tilt start envelope")
+                self.envelope.startEnvelope()
+
+        else:
+            self.sequencerHexpansion.writeCV(self.GateSlot, MAX_VOLTS)
 
 
         return
@@ -108,11 +128,16 @@ class Tilt():
         #    ctx.rgb(1, 0, 0).move_to(-80, 0).text("no readings yet")
 
 
-        ctx.rgb(1,0,0).move_to(-30,-20).text("Tilt")
+        ctx.rgb(1,0,0).move_to(-30,-20).text("Tilt"+ " " + self.dirLabel)
         
-        ctx.rgb(1,0,0).move_to(-10,0).text("Ch " + repr(self.channel) + " " + self.dirLabel)
+        ctx.rgb(1,0,0).move_to(-10,0).text("Ch " + repr(self.channel) )
         
         ctx.rgb(1,0,0).move_to(-30,20).text("Octave " + repr(self.octave))
+        
+        if self.doEnvelope:
+            ctx.rgb(1,0,0).move_to(-30,60).text("< Bumpy")
+        else:    
+            ctx.rgb(1,0,0).move_to(-30,60).text("Smooth >")
 
         ctx.restore()
 
