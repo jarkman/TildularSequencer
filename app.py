@@ -82,12 +82,12 @@ class TildularSequencer(app.App):
        
     async def buttonDownHandler(self, event):
 
-        print("app button event " + repr(event))
+        #print("app button event " + repr(event))
 
         #layout_handled = await self.layout.button_event(event)
         #if not layout_handled:
         if not self.menuActive:
-            print("app button forwarding to " + repr(self.uiMode))
+            #print("app button forwarding to " + repr(self.uiMode))
             self.uiMode.buttonDownHandler(event)
         else:
             print("... ignoring, menu up")

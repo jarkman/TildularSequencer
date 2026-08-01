@@ -44,7 +44,7 @@ class Sequencer():
             self.GateSlot = DACSlots.Gate2
         
     def buttonDownHandler(self, event):
-        print("sequencer button event " + repr(event))
+        #print("sequencer button event " + repr(event))
 
         if JOYSTICK_BUTTON_TYPES["LEFT"] in event.button:
             self.numBeats = max(self.numBeats-1, 0)
@@ -75,7 +75,7 @@ class Sequencer():
 
         # only use odd-numbered LEDs
         for i in range(0, 12):
-            if i%2 == 0:
+            if i%2 == 0 and i/2 < self.numBeats:
                 tildagonos.leds[i+1] = (0, 255, 0) # light up active ones green
             else:
                 tildagonos.leds[i+1] = (0, 0, 0)
@@ -85,7 +85,7 @@ class Sequencer():
 
             # update CV vaue from knob
             volts = self.sequencerHexpansion.adc[ADCSlots.Pitch][1]
-            print("new note volts " + repr(volts))
+            #print("new note volts " + repr(volts))
             self.notes[self.selectedNote] = volts
             
             
