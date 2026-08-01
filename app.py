@@ -30,7 +30,7 @@ from .turing import Turing
 # TODO - copy update strategy from https://github.com/MatthewWilkes/md-updater/blob/main/sega.py
 
 
-main_menu_items = ["Clock", "Sequencer", "Turing"]
+main_menu_items = ["Clock", "Sequencer 1", "Sequencer 2", "Quantiser 1", "Quantiser 2", "Turing"]
 
 
 class TildularSequencer(app.App):
@@ -53,11 +53,13 @@ class TildularSequencer(app.App):
         self.sequencerHexpansion = SequencerHexpansion()
 
         self.clock = Clock(self, self.sequencerHexpansion)
-        self.sequencer = Sequencer(self, self.sequencerHexpansion, self.button_states)
+        self.sequencer1 = Sequencer(self, self.sequencerHexpansion, 1, self.button_states)
+        self.sequencer2 = Sequencer(self, self.sequencerHexpansion, 2, self.button_states)
         self.turing = Turing(self)
 
-        self.activeMode = self.sequencer
-        self.uiMode = self.sequencer
+        self.activeMode1 = self.sequencer1
+        self.activeMode2 = self.sequencer2
+        self.uiMode = self.sequencer1
         self.menuActive = True
 
         self.lastBackgroundUpdate = time.time() * 1000
@@ -78,8 +80,10 @@ class TildularSequencer(app.App):
             self.uiMode = self.clock
             #print("selected clock")
         elif idx == 1:
-            self.uiMode = self.sequencer
+            self.uiMode = self.sequencer1
         elif idx == 2:
+            self.uiMode = self.sequencer2
+        elif idx == 5:
             self.uiMode = self.turing
 
         if self.uiMode != self.clock:  # clock is always active
@@ -97,13 +101,13 @@ class TildularSequencer(app.App):
         self.menuActive = False
 
     # apparently not called when app is minimised?
-    async def background_update(self):
+    def background_update(self, delta):
 
-        print("background update")
+        print("app background update")
 
         now = time.time() * 1000.0
 
-        delta = now - self.lastBackgroundUpdate 
+        #delta = now - self.lastBackgroundUpdate 
 
         self.lastBackgroundUpdate = now
         
@@ -111,9 +115,12 @@ class TildularSequencer(app.App):
 
         self.clock.background_update(delta)
 
-        self.activeMode.background_update(delta)
+        self.activeMode1.background_update(delta)
+        self.activeMode2.background_update(delta)
 
     def update(self, delta):
+
+        print("app update")
 
         if self.menuActive:
             #print("update menu")
@@ -131,10 +138,9 @@ class TildularSequencer(app.App):
 
             self.sequencerHexpansion.update(delta)
             self.clock.update(delta)
-            
-        self.activeMode.update(delta)
+            self.uiMode.update(delta)
 
-        self.background_update()
+        self.background_update(delta)
         
         return True
     

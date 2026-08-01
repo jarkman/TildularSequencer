@@ -30,7 +30,7 @@ class Clock():
 
     def update(self, delta):
 
-        print(repr(self.app.button_states))
+        #print(repr(self.app.button_states))
         if self.app.button_states.get(BUTTON_TYPES["UP"]):
             self.beatInterval = self.beatInterval * 0.9
         
@@ -48,8 +48,8 @@ class Clock():
 
         self.fractionOfBeat = self.fractionOfBeat % 1.0
 
-        if old > self.fractionOfBeat:
-            self.sequencerHexpansion.startPulse(self.sequencerHexpansion.DACSlots.CLOCK)
+        #if old > self.fractionOfBeat:
+        #    self.sequencerHexpansion.startPulse(self.sequencerHexpansion.DACSlots.CLOCK)
             #emit a pulse
 
     

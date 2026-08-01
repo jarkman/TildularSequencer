@@ -115,7 +115,7 @@ class DACSlots:
 class SequencerHexpansion():
     def __init__(self, config=None):
         self.maxVolts = MAX_VOLTS
-        
+
         self.port = None
         self.i2c = None
         self.adc_found = False
@@ -148,12 +148,12 @@ class SequencerHexpansion():
             return
 
         #value is a float 0-3.3
-        print("writeCV volts " + repr(volts))
+        #print("writeCV volts " + repr(volts))
         try:
             code = dac_code(volts)
-            print("dacCode " + repr(code))
+            #print("dacCode " + repr(code))
             self.dac[slot] = code
-            print("slot val " + repr(self.dac[slot]))
+            #print("slot val " + repr(self.dac[slot]))
             write_dac(self.i2c, self.dac_addr, self.dac)
         except Exception as e:
             #self.dac_addr = None

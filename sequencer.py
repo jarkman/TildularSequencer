@@ -23,22 +23,29 @@ class Sequencer():
     sweepPos = 0.0 # float, goes from 0 to numBeats as time goes by
     fractionOfBeat = 0
 
-    def __init__(self, app, sequencerHexpansion, buttonStates):
+    def __init__(self, app, sequencerHexpansion, channel, buttonStates):
         super().__init__()
         self.app = app
         self.sequencerHexpansion = sequencerHexpansion
+        self.channel = channel
         self.buttonStates = buttonStates
         self.selectedNote = -1
         self.notes = []
         for n in range(self.maxBeats):
             self.notes.append((3.3 * n)/self.maxBeats) # initialise with an arpeggio
 
+        if self.channel == 1:
+            self.DACSlot = DACSlots.CV1
+            self.GateSlot = DACSlots.Gate1
+        else:
+            self.DACSlot = DACSlots.CV2
+            self.GateSlot = DACSlots.Gate2
         
 
     def update(self, delta):
         #self.updateLEDs()
 
-        self.background_update(delta)
+        #self.background_update(delta)
 
         #print(repr(self.buttonStates))
 
@@ -79,6 +86,9 @@ class Sequencer():
     
         
     def background_update(self, delta):
+
+        print("sequencer backgroundUpdate ch "+ repr(self.channel) + " delta " + repr(delta))
+
         self.sweepPos = self.sweepPos + (0.001*delta)/self.beatInterval
         if self.sweepPos > self.numBeats:
             self.sweepPos = self.sweepPos - self.numBeats
@@ -89,8 +99,8 @@ class Sequencer():
             if self.notes[newBeat] > 0.0:
                 # emit new note
                 #print("new note4 " + repr(self.notes[newBeat])+ " V")
-                self.sequencerHexpansion.writeCV(DACSlots.CV1, self.notes[newBeat])
-                self.sequencerHexpansion.startPulse(DACSlots.Gate1)
+                self.sequencerHexpansion.writeCV(self.DACSlot, self.notes[newBeat])
+                self.sequencerHexpansion.startPulse(self.GateSlot)
 
             
         self.beat = newBeat
