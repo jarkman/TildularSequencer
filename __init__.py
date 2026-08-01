@@ -1,5 +1,6 @@
 from .app import TildularSequencer
 from .sequencer import Sequencer
+from .keyboard import Keyboard
 from .sequencerHexpansion import SequencerHexpansion
 from .sequencerHexpansion import ADCSlots
 from .sequencerHexpansion import DACSlots

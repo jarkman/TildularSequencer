@@ -14,6 +14,7 @@ from system.eventbus import eventbus
 from events.input import BUTTON_TYPES, ButtonDownEvent
 from system.patterndisplay.events import PatternDisable
 from .sequencer import Sequencer
+from .keyboard import Keyboard
 from .clock import Clock
 from .turing import Turing
 
@@ -31,7 +32,7 @@ from .turing import Turing
 # TODO - copy update strategy from https://github.com/MatthewWilkes/md-updater/blob/main/sega.py
 
 
-main_menu_items = ["Clock", "Sequencer 1", "Sequencer 2", "Quantiser 1", "Quantiser 2", "Turing"]
+main_menu_items = ["Clock", "Sequencer 1", "Sequencer 2", "Keyboard 1", "Keyboard 2", "Quantiser 1", "Quantiser 2", "Turing"]
 
 
 class TildularSequencer(app.App):
@@ -56,6 +57,8 @@ class TildularSequencer(app.App):
         self.clock = Clock(self, self.sequencerHexpansion)
         self.sequencer1 = Sequencer(self, self.sequencerHexpansion, 1, self.button_states)
         self.sequencer2 = Sequencer(self, self.sequencerHexpansion, 2, self.button_states)
+        self.keyboard1 = Keyboard(self, self.sequencerHexpansion, 1, self.button_states)
+        self.keyboard2 = Keyboard(self, self.sequencerHexpansion, 2, self.button_states)
         self.turing = Turing(self)
 
         self.activeMode1 = self.sequencer1
@@ -97,14 +100,20 @@ class TildularSequencer(app.App):
             #print("selected clock")
         elif idx == 1:
             self.uiMode = self.sequencer1
+            self.activeMode1 = self.uiMode
         elif idx == 2:
             self.uiMode = self.sequencer2
+            self.activeMode2 = self.uiMode
+        elif idx == 3:
+            self.uiMode = self.keyboard1
+            self.activeMode1 = self.uiMode
+        elif idx == 4:
+            self.uiMode = self.keyboard2
+            self.activeMode2 = self.uiMode
         elif idx == 5:
             self.uiMode = self.turing
 
-        if self.uiMode != self.clock:  # clock is always active
-            self.activeMode = self.uiMode
-            
+       
         self.button_states.clear()
         self.menuActive = False
 

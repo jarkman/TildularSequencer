@@ -143,6 +143,7 @@ class Sequencer():
     def draw(self, ctx):
         
         ctx.save()
+        
         #ctx.rgb(0.2,0,0).rectangle(-120,-120,240,240).fill()
         #ctx.rgb(1,0,0).move_to(-80,0).text("T" + repr(self.totalT))
         
@@ -220,6 +221,7 @@ class Sequencer():
                 ctx.rgb(r,g,b).arc(x,y, size, 0, 2 * math.pi, True).stroke()
 
         ctx.rgb(1,0,0).move_to(-10,0).text("Ch " + repr(self.channel))
+        ctx.rgb(1,0,0).move_to(-10,30).text(repr(self.numBeats) + " beats")
 
         ctx.restore()
 
