@@ -27,6 +27,8 @@ class Clock():
         self.app = app
         self.sequencerHexpansion = sequencerHexpansion
         
+    async def buttonDownHandler(self, event):
+        pass
 
     def update(self, delta):
 

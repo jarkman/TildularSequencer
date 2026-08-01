@@ -11,6 +11,7 @@ from app_components import Menu, Notification, clear_background
 from .sequencerHexpansion import SequencerHexpansion
 from tildagonos import tildagonos
 from system.eventbus import eventbus
+from events.input import BUTTON_TYPES, ButtonDownEvent
 from system.patterndisplay.events import PatternDisable
 from .sequencer import Sequencer
 from .clock import Clock
@@ -71,10 +72,25 @@ class TildularSequencer(app.App):
             back_handler=self.back_handler,
         )
 
+        eventbus.on_async(ButtonDownEvent, self.buttonDownHandler, self)
        
+    async def buttonDownHandler(self, event):
+
+        print("app button event " + repr(event))
+
+        #layout_handled = await self.layout.button_event(event)
+        #if not layout_handled:
+        if not self.menuActive:
+            print("app button forwarding to " + repr(self.uiMode))
+            self.uiMode.buttonDownHandler(event)
+        else:
+            print("... ignoring, menu up")
 
     def select_handler(self, item, idx):
 
+        if not self.menuActive:
+            return
+        
         print("Selecting menu item " + repr(idx))
         if idx == 0:
             self.uiMode = self.clock
@@ -136,8 +152,8 @@ class TildularSequencer(app.App):
                     #print("cancel showing menu")
                     self.menuActive = True
 
-            self.sequencerHexpansion.update(delta)
-            self.clock.update(delta)
+            #self.sequencerHexpansion.update(delta)
+            #self.clock.update(delta)
             self.uiMode.update(delta)
 
         #self.background_update(delta)

@@ -6,12 +6,13 @@ import math
 
 
 from events.input import Buttons, BUTTON_TYPES
+from events.joystick import JOYSTICK_BUTTON_TYPES
 from app_components import clear_background
 from .sequencerHexpansion import DACSlots, ADCSlots
 from tildagonos import tildagonos
 from system.eventbus import eventbus
 from system.patterndisplay.events import PatternDisable
-from frontboards.twentysix import TwentyTwentySix
+from frontboards.twentysix import TwentyTwentySix, 
 
 #import sequencerHexpansion
 
@@ -42,6 +43,13 @@ class Sequencer():
             self.DACSlot = DACSlots.CV2
             self.GateSlot = DACSlots.Gate2
         
+    def buttonDownHandler(self, event):
+        print("sequencer button event " + repr(event))
+
+        if JOYSTICK_BUTTON_TYPES["LEFT"] in event.button:
+            self.numBeats = max(self.numBeats-1, 0)
+        if JOYSTICK_BUTTON_TYPES["RIGHT"] in event.button:
+            self.numBeats = min(self.numBeats+1, self.maxBeats)
 
     def update(self, delta):
         #self.updateLEDs()
@@ -168,19 +176,29 @@ class Sequencer():
                 #fill
                 size = self.fmap(self.fractionOfBeat, 0.0, 1.0, bigBlobSize*2.0, bigBlobSize*2.0/2.0)
                 r = int(self.fmap(self.fractionOfBeat, 0.0, 1.0, 0, 255))
+                g = 234
+                b = 0
                 fill = True
             elif b == self.beat:
                 #fill
                 size = self.fmap(self.fractionOfBeat, 0.0, 1.0, bigBlobSize, bigBlobSize/2.0)
                 r = int(self.fmap(self.fractionOfBeat, 0.0, 1.0, 0, 255))
+                g = 234
+                b = 0
                 fill = True
             elif b < self.numBeats:
                 #empty
                 size = bigBlobSize/2.0
+                r = int(self.fmap(self.fractionOfBeat, 0.0, 1.0, 0, 255))
+                g = 234
+                b = 0
                 fill = True
             else:
                 #dot
                 size = dotSize
+                r = 0
+                g = 0
+                b = int(self.fmap(self.fractionOfBeat, 0.0, 1.0, 0, 255))
                 fill = False
 
             if b < self.numBeats:
@@ -195,13 +213,13 @@ class Sequencer():
             x = blobRadius*math.cos(theta)
             y = blobRadius*math.sin(theta)
             if fill:
-                divider = fraction * 2 * math.pi
-                ctx.rgb(r, 234, 0).arc(x,y, size, 0, 2 * math.pi, True).fill()
-                ctx.rgb(0, 234, r).arc(x,y, size*fraction, 0, 2 * math.pi, True).fill()
+                
+                ctx.rgb(r, g, b).arc(x,y, size, 0, 2 * math.pi, True).fill()
+                ctx.rgb(g,r,b).arc(x,y, size*fraction, 0, 2 * math.pi, True).fill() # and an inner circle to show volts
             else:
-                ctx.rgb(0, 0, r).arc(x,y, size, 0, 2 * math.pi, True).stroke()
+                ctx.rgb(r,g,b).arc(x,y, size, 0, 2 * math.pi, True).stroke()
 
-        ctx.rgb(1,0,0).move_to(-20,0).text("Ch " + repr(self.channel))
+        ctx.rgb(1,0,0).move_to(-10,0).text("Ch " + repr(self.channel))
 
         ctx.restore()
 
