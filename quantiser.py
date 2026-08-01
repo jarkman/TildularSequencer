@@ -24,9 +24,15 @@ class Quantiser():
         self.channel = channel
         self.buttonStates = buttonStates
         self.noteEnable = [True]*12 # the notes we are preapred to accept
+        self.doQuantise = False
         
 
     def quantise(self, volts):
+        
+        #print("quantiser in %f"%(volts))
+
+        if not self.doQuantise:
+            return volts
         
         note = volts % 1.0
         octave = volts - note
@@ -36,23 +42,23 @@ class Quantiser():
 
         for i in range(12):
             if self.noteEnable[i]:
-                diff = abs(12.0/i - note)
+                diff = abs(i/12.0 - note)
                 if diff < minDiff:
                     minDiff = diff
-                    bestV = 12.0/i
+                    bestV = i/12.0
 
         if bestV > -1:
+            #print("quantiser out %f"%(octave+bestV))
+        
             return octave+bestV
         
-        print("quantiser - no note!")
+        #print("quantiser - no note!")
         return volts
 
         
     def buttonDownHandler(self, event):
 
-        play = False
-
-
+        
         for i in range(12):
             touchN = i+1 # count 1-12
             
@@ -63,7 +69,10 @@ class Quantiser():
             if TOUCH[key] in event.button:
                 self.noteEnable[i] = not self.noteEnable[i]
 
-            
+        if JOYSTICK_BUTTON_TYPES["LEFT"] in event.button:
+            self.doQuantise = False
+        if JOYSTICK_BUTTON_TYPES["RIGHT"] in event.button:
+            self.doQuantise = True   
 
     def update(self, delta):
         
@@ -80,7 +89,7 @@ class Quantiser():
         
     def background_update(self, delta):
 
-        # keyboard has nothing to do in the background
+        # quantiser has nothing to do in the background
         return
     
         
@@ -97,6 +106,11 @@ class Quantiser():
         ctx.rgb(1,0,0).move_to(-30,-20).text("Quantiser")
         
         ctx.rgb(1,0,0).move_to(-10,0).text("Ch " + repr(self.channel))
+        
+        if self.doQuantise:
+            ctx.rgb(1,0,0).move_to(-30,60).text("< Quantised")
+        else:    
+            ctx.rgb(1,0,0).move_to(-30,60).text("Free >")
         
         ctx.restore()
 
