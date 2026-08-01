@@ -103,7 +103,7 @@ class TildularSequencer(app.App):
     # apparently not called when app is minimised?
     def background_update(self, delta):
 
-        print("app background update")
+        #print("app background update")
 
         now = time.time() * 1000.0
 
@@ -120,7 +120,7 @@ class TildularSequencer(app.App):
 
     def update(self, delta):
 
-        print("app update")
+        #print("app update")
 
         if self.menuActive:
             #print("update menu")
@@ -140,7 +140,7 @@ class TildularSequencer(app.App):
             self.clock.update(delta)
             self.uiMode.update(delta)
 
-        self.background_update(delta)
+        #self.background_update(delta)
         
         return True
     

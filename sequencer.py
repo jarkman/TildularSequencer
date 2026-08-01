@@ -4,6 +4,7 @@ import time
 import asyncio
 import math
 
+
 from events.input import Buttons, BUTTON_TYPES
 from app_components import clear_background
 from .sequencerHexpansion import DACSlots, ADCSlots
@@ -87,26 +88,22 @@ class Sequencer():
         
     def background_update(self, delta):
 
-        print("sequencer backgroundUpdate ch "+ repr(self.channel) + " delta " + repr(delta))
+        #print("sequencer backgroundUpdate ch "+ repr(self.channel) + " delta " + repr(delta))
 
-        self.sweepPos = self.sweepPos + (0.001*delta)/self.beatInterval
-        if self.sweepPos > self.numBeats:
-            self.sweepPos = self.sweepPos - self.numBeats
+        oldF = self.fractionOfBeat
 
-        newBeat = math.floor(self.sweepPos)
+        self.fractionOfBeat = self.app.clock.fractionOfBeat
 
-        if newBeat != self.beat:
-            if self.notes[newBeat] > 0.0:
+        if oldF > self.fractionOfBeat:
+            # a new beat has to happen
+            self.beat = (self.beat + 1) % self.numBeats
+            if self.notes[self.beat] > 0.0:
                 # emit new note
                 #print("new note4 " + repr(self.notes[newBeat])+ " V")
-                self.sequencerHexpansion.writeCV(self.DACSlot, self.notes[newBeat])
+                self.sequencerHexpansion.writeCV(self.DACSlot, self.notes[self.beat])
                 self.sequencerHexpansion.startPulse(self.GateSlot)
 
-            
-        self.beat = newBeat
-        
-        self.fractionOfBeat = self.sweepPos % 1.0
-
+        self.sweepPos = self.beat + self.fractionOfBeat
        
 
     def updateLEDs(self):
@@ -204,13 +201,7 @@ class Sequencer():
             else:
                 ctx.rgb(0, 0, r).arc(x,y, size, 0, 2 * math.pi, True).stroke()
 
-        #crosshairs
-        #ctx.rgb(0, 1, 0).begin_path()
-        #ctx.move_to(-120, 0)
-        #ctx.line_to(120, 0)
-        #ctx.move_to(0, 120)
-        #ctx.line_to(0, -120)
-        #ctx.stroke()
+        ctx.rgb(1,0,0).move_to(-20,0).text("Ch " + repr(self.channel))
 
         ctx.restore()
 

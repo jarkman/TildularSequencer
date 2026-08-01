@@ -44,15 +44,7 @@ class Clock():
 
         self.fractionOfBeat = self.fractionOfBeat + (0.001*delta)/self.beatInterval
   
-        old = self.fractionOfBeat
-
         self.fractionOfBeat = self.fractionOfBeat % 1.0
-
-        #if old > self.fractionOfBeat:
-        #    self.sequencerHexpansion.startPulse(self.sequencerHexpansion.DACSlots.CLOCK)
-            #emit a pulse
-
-    
 
     def updateLEDs(self):
 
