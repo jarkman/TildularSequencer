@@ -17,6 +17,7 @@ from .sequencer import Sequencer
 from .keyboard import Keyboard
 from .tilt import Tilt
 from .envelope import Envelope
+from .quantiser import Quantiser
 from .clock import Clock
 from .turing import Turing
 
@@ -60,13 +61,18 @@ class TildularSequencer(app.App):
 
         self.envelope1 = Envelope(self, self.sequencerHexpansion, 1, self.button_states)
         self.envelope2 = Envelope(self, self.sequencerHexpansion, 2, self.button_states)
+        
+        self.quantiser1 = Quantiser(self, self.sequencerHexpansion, 1, self.button_states)
+        self.quantiser2 = Quantiser(self, self.sequencerHexpansion, 2, self.button_states)
 
-        self.sequencer1 = Sequencer(self, self.sequencerHexpansion, 1, self.button_states,self.envelope1)
-        self.sequencer2 = Sequencer(self, self.sequencerHexpansion, 2, self.button_states, self.envelope2)
-        self.keyboard1 = Keyboard(self, self.sequencerHexpansion, 1, self.button_states, self.envelope1)
-        self.keyboard2 = Keyboard(self, self.sequencerHexpansion, 2, self.button_states, self.envelope2)
-        self.tilt1 = Tilt(self, self.sequencerHexpansion, 1, self.button_states,self.envelope1)
-        self.tilt2 = Tilt(self, self.sequencerHexpansion, 2, self.button_states,self.envelope2)
+        self.sequencer1 = Sequencer(self, self.sequencerHexpansion, 1, self.button_states,self.envelope1, self.quantiser1)
+        self.sequencer2 = Sequencer(self, self.sequencerHexpansion, 2, self.button_states, self.envelope2, self.quantiser2)
+
+        self.keyboard1 = Keyboard(self, self.sequencerHexpansion, 1, self.button_states, self.envelope1, self.quantiser1)
+        self.keyboard2 = Keyboard(self, self.sequencerHexpansion, 2, self.button_states, self.envelope2, self.quantiser2)
+
+        self.tilt1 = Tilt(self, self.sequencerHexpansion, 1, self.button_states,self.envelope1, self.quantiser1)
+        self.tilt2 = Tilt(self, self.sequencerHexpansion, 2, self.button_states,self.envelope2, self.quantiser2)
         
         self.turing = Turing(self)
 
@@ -130,6 +136,10 @@ class TildularSequencer(app.App):
         elif idx == 8:
             self.uiMode = self.envelope2
         elif idx == 9:
+            self.uiMode = self.quantiser1 
+        elif idx == 10:
+            self.uiMode = self.quantiser2
+        elif idx == 11:
             self.uiMode = self.turing
 
        
@@ -184,11 +194,10 @@ class TildularSequencer(app.App):
                     #print("cancel showing menu")
                     self.menuActive = True
 
-            #self.sequencerHexpansion.update(delta)
-            #self.clock.update(delta)
+            
             self.uiMode.update(delta)
 
-        #self.background_update(delta)
+       
         
         return True
     
