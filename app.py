@@ -16,6 +16,7 @@ from system.patterndisplay.events import PatternDisable
 from .sequencer import Sequencer
 from .keyboard import Keyboard
 from .tilt import Tilt
+from .envelope import Envelope
 from .clock import Clock
 from .turing import Turing
 
@@ -33,7 +34,7 @@ from .turing import Turing
 # TODO - copy update strategy from https://github.com/MatthewWilkes/md-updater/blob/main/sega.py
 
 
-main_menu_items = ["Clock", "Sequencer 1", "Sequencer 2", "Keyboard 1", "Keyboard 2", "Tilt 1", "Tilt 2", "Quantiser 1", "Quantiser 2", "Turing"]
+main_menu_items = ["Clock", "Sequencer 1", "Sequencer 2", "Keyboard 1", "Keyboard 2", "Tilt 1", "Tilt 2", "Envelope 1", "Envelope 2", "Quantiser 1", "Quantiser 2", "Turing"]
 
 
 class TildularSequencer(app.App):
@@ -55,13 +56,18 @@ class TildularSequencer(app.App):
 
         self.sequencerHexpansion = SequencerHexpansion()
 
-        self.clock = Clock(self, self.sequencerHexpansion)
-        self.sequencer1 = Sequencer(self, self.sequencerHexpansion, 1, self.button_states)
-        self.sequencer2 = Sequencer(self, self.sequencerHexpansion, 2, self.button_states)
-        self.keyboard1 = Keyboard(self, self.sequencerHexpansion, 1, self.button_states)
-        self.keyboard2 = Keyboard(self, self.sequencerHexpansion, 2, self.button_states)
+        self.clock = Clock(self)
+
+        self.envelope1 = Envelope(self, self.sequencerHexpansion, 1, self.button_states)
+        self.envelope2 = Envelope(self, self.sequencerHexpansion, 2, self.button_states)
+
+        self.sequencer1 = Sequencer(self, self.sequencerHexpansion, 1, self.button_states,self.envelope1)
+        self.sequencer2 = Sequencer(self, self.sequencerHexpansion, 2, self.button_states, self.envelope2)
+        self.keyboard1 = Keyboard(self, self.sequencerHexpansion, 1, self.button_states, self.envelope1)
+        self.keyboard2 = Keyboard(self, self.sequencerHexpansion, 2, self.button_states, self.envelope2)
         self.tilt1 = Tilt(self, self.sequencerHexpansion, 1, self.button_states)
         self.tilt2 = Tilt(self, self.sequencerHexpansion, 2, self.button_states)
+        
         self.turing = Turing(self)
 
         self.activeMode1 = self.sequencer1
@@ -120,6 +126,10 @@ class TildularSequencer(app.App):
             self.uiMode = self.tilt2
             self.activeMode2 = self.uiMode
         elif idx == 7:
+            self.uiMode = self.envelope1  # envelope and quantiser don't make notes on their own so we don't set an active mode for them
+        elif idx == 8:
+            self.uiMode = self.envelope2
+        elif idx == 9:
             self.uiMode = self.turing
 
        
@@ -145,12 +155,16 @@ class TildularSequencer(app.App):
 
         self.lastBackgroundUpdate = now
         
-        self.sequencerHexpansion.update(delta)
-
         self.clock.background_update(delta)
 
+        self.sequencerHexpansion.update(delta)
+
+        
         self.activeMode1.background_update(delta)
         self.activeMode2.background_update(delta)
+        
+        self.envelope1.background_update(delta)
+        self.envelope2.background_update(delta)
 
     def update(self, delta):
 

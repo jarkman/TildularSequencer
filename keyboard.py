@@ -23,12 +23,13 @@ class Keyboard():
     sweepPos = 0.0 # float, goes from 0 to numBeats as time goes by
     fractionOfBeat = 0
 
-    def __init__(self, app, sequencerHexpansion, channel, buttonStates):
+    def __init__(self, app, sequencerHexpansion, channel, buttonStates, envelope):
         super().__init__()
         self.app = app
         self.sequencerHexpansion = sequencerHexpansion
         self.channel = channel
         self.buttonStates = buttonStates
+        self.envelope = envelope
         self.selectedNote = 0
         self.octave = 0
         if self.channel == 1:
@@ -80,7 +81,8 @@ class Keyboard():
             self.selectedNote = newNote
             volts = self.octave + self.selectedNote/12.0
             self.sequencerHexpansion.writeCV(self.DACSlot, volts)
-            self.sequencerHexpansion.startPulse(self.GateSlot)
+            self.envelope.startEnvelope()
+            #self.sequencerHexpansion.startPulse(self.GateSlot)
             
 
     def update(self, delta):

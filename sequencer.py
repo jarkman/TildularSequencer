@@ -25,12 +25,13 @@ class Sequencer():
     sweepPos = 0.0 # float, goes from 0 to numBeats as time goes by
     fractionOfBeat = 0
 
-    def __init__(self, app, sequencerHexpansion, channel, buttonStates):
+    def __init__(self, app, sequencerHexpansion, channel, buttonStates, envelope):
         super().__init__()
         self.app = app
         self.sequencerHexpansion = sequencerHexpansion
         self.channel = channel
         self.buttonStates = buttonStates
+        self.envelope = envelope
         self.selectedNote = -1
         self.notes = []
         for n in range(self.maxBeats):
@@ -109,7 +110,8 @@ class Sequencer():
                 # emit new note
                 #print("new note4 " + repr(self.notes[newBeat])+ " V")
                 self.sequencerHexpansion.writeCV(self.DACSlot, self.notes[self.beat])
-                self.sequencerHexpansion.startPulse(self.GateSlot)
+                self.envelope.startEnvelope()
+                #self.sequencerHexpansion.startPulse(self.GateSlot)
 
         self.sweepPos = self.beat + self.fractionOfBeat
        

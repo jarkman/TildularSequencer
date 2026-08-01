@@ -22,10 +22,10 @@ class Clock():
     
     fractionOfBeat = 0
 
-    def __init__(self, app, sequencerHexpansion):
+    def __init__(self, app):
         super().__init__()
         self.app = app
-        self.sequencerHexpansion = sequencerHexpansion
+        
         
     async def buttonDownHandler(self, event):
         pass
