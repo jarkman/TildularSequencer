@@ -12,7 +12,7 @@ from .sequencerHexpansion import DACSlots, ADCSlots
 from tildagonos import tildagonos
 from system.eventbus import eventbus
 from system.patterndisplay.events import PatternDisable
-from frontboards.twentysix import TwentyTwentySix, 
+from frontboards.twentysix import TwentyTwentySix 
 
 #import sequencerHexpansion
 
@@ -143,7 +143,7 @@ class Sequencer():
     def draw(self, ctx):
         
         ctx.save()
-        
+
         #ctx.rgb(0.2,0,0).rectangle(-120,-120,240,240).fill()
         #ctx.rgb(1,0,0).move_to(-80,0).text("T" + repr(self.totalT))
         

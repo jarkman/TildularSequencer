@@ -15,6 +15,7 @@ from events.input import BUTTON_TYPES, ButtonDownEvent
 from system.patterndisplay.events import PatternDisable
 from .sequencer import Sequencer
 from .keyboard import Keyboard
+from .tilt import Tilt
 from .clock import Clock
 from .turing import Turing
 
@@ -32,7 +33,7 @@ from .turing import Turing
 # TODO - copy update strategy from https://github.com/MatthewWilkes/md-updater/blob/main/sega.py
 
 
-main_menu_items = ["Clock", "Sequencer 1", "Sequencer 2", "Keyboard 1", "Keyboard 2", "Quantiser 1", "Quantiser 2", "Turing"]
+main_menu_items = ["Clock", "Sequencer 1", "Sequencer 2", "Keyboard 1", "Keyboard 2", "Tilt 1", "Tilt 2", "Quantiser 1", "Quantiser 2", "Turing"]
 
 
 class TildularSequencer(app.App):
@@ -59,6 +60,8 @@ class TildularSequencer(app.App):
         self.sequencer2 = Sequencer(self, self.sequencerHexpansion, 2, self.button_states)
         self.keyboard1 = Keyboard(self, self.sequencerHexpansion, 1, self.button_states)
         self.keyboard2 = Keyboard(self, self.sequencerHexpansion, 2, self.button_states)
+        self.tilt1 = Tilt(self, self.sequencerHexpansion, 1, self.button_states)
+        self.tilt2 = Tilt(self, self.sequencerHexpansion, 2, self.button_states)
         self.turing = Turing(self)
 
         self.activeMode1 = self.sequencer1
@@ -111,6 +114,12 @@ class TildularSequencer(app.App):
             self.uiMode = self.keyboard2
             self.activeMode2 = self.uiMode
         elif idx == 5:
+            self.uiMode = self.tilt1
+            self.activeMode1 = self.uiMode
+        elif idx == 6:
+            self.uiMode = self.tilt2
+            self.activeMode2 = self.uiMode
+        elif idx == 7:
             self.uiMode = self.turing
 
        
@@ -173,6 +182,8 @@ class TildularSequencer(app.App):
 
     def draw(self, ctx):
 
+        ctx.save()
+
         clear_background(ctx)
 
         
@@ -186,7 +197,8 @@ class TildularSequencer(app.App):
         
         if not self.sequencerHexpansion.gotHexpansion():
             ctx.rgb(1,0,0).move_to(-80,0).text("No hexpansion!")
-            
+
+        ctx.restore()    
         
 
         
