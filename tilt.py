@@ -82,6 +82,7 @@ class Tilt():
         volts = fmap(g, -9.81, 9.81, 0, MAX_VOLTS)
 
         self.sequencerHexpansion.writeCV(self.DACSlot, volts)
+        self.sequencerHexpansion.writeCV(self.GateSlot, MAX_VOLTS)
 
 
         return
