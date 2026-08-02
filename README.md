@@ -1,7 +1,7 @@
 # TildularSequencer
 A Tildagon badge app (for the 2026 Spaceagon) that works with the Thawney/Jarkman Tildular Sequencer hexpansion. 
 
-It generates 2 channels of CV (1V/octave) and gate/envelope signals to work with other Tildular modules and regular Eurorack (CV in the range 0-3.3V)
+It generates 2 channels of CV (1V/octave) and gate/envelope signals to work with other Tildular modules and regular Eurorack (CV in the range 0-3.3V or so, other input voltages are safe but ignored)
 
 Features include 2 channels of
 - Sequencer
@@ -17,9 +17,17 @@ It's not done yet.
 TODO
 
 - Fix sequencer display
+- Something's up with back button handling, you can leave the app when you dodn't expect to
+- Show which modes are active in the menu
+- Make quantiser search outside the home octave for the closest permitted note
+- Give quantiser some pre-set scales (maybe choose with joystick up/down)
+- Give quantiser an informative display of some sort
+- Make a Turing-alike generator
 - Save and restore all settings
 - Flash the EEPROM and have it start when the module is plugged in
 - Extend sequencer to multiple screens, navigating with the joystick
 - Handle clock and reset inputs
+- Add some euclidean clock business to the clock or the sequencer
 - Improve the display all over
+
 

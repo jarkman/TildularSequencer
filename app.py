@@ -21,8 +21,6 @@ from .quantiser import Quantiser
 from .clock import Clock
 from .turing import Turing
 
-#import sequencerHexpansion
-
 
 # to simulate, 
 # cd C:\Tildagon\badge-2024-software\sim
@@ -30,6 +28,26 @@ from .turing import Turing
 
 # deploy to badge: https://tildagon.badge.emfcamp.org/tildagon-apps/run-on-badge/
 # seem to need to do each file individually?
+
+# handy links
+
+# this app
+# https://github.com/jarkman/TildularSequencer
+
+# PCB design files
+# TODO
+
+# 2026 button names
+# https://github.com/emfcamp/badge-2024-software/blob/a412e00df9cd187437dacd702724aad9cb0d0d9d/modules/frontboards/twentysix.py#L109
+
+# test app for the sequencer hexpansion
+# https://github.com/thawney/Tildular/blob/main/Tildular_Test/app.py
+
+# Tildagon dec docs
+# https://tildagon.badge.emfcamp.org/tildagon-apps/reference/reference/
+
+
+
 
 
 # TODO - copy update strategy from https://github.com/MatthewWilkes/md-updater/blob/main/sega.py
