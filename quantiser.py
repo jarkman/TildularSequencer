@@ -103,8 +103,23 @@ class Quantiser():
 
         ctx.save()
 
+
+
         ctx.text_align = ctx.CENTER
         ctx.rgb(1,0,0)
+
+        noteNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
+
+        for note in range(12):
+            theta = 2.0*math.pi*note/12.0
+            theta = theta - math.pi/2.0 # put 0 at the top
+            theta = theta  + (2.0*math.pi)/24.0 # align with the touchpads
+        
+            x = 90*math.cos(theta)
+            y = 90*math.sin(theta)
+
+            ctx.move_to(x,y).text(noteNames[note])
+
         ctx.move_to(0,0).text("Quantiser")
         ctx.move_to(0,20).text("Ch " + repr(self.channel))
         

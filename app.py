@@ -21,7 +21,7 @@ from .quantiser import Quantiser
 from .clock import Clock
 from .turing import Turing
 
-
+vbggftqwa
 # to simulate, 
 # cd C:\Tildagon\badge-2024-software\sim
 # pipenv run python run.py
