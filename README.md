@@ -16,8 +16,8 @@ It's not done yet.
 
 TODO
 
-- Fix sequencer display
-- Something's up with back button handling, you can leave the app when you dodn't expect to
+
+- Something's up with back button handling, you can sometime leave the app when you didn't expect to
 - Show which modes are active in the menu
 - Make quantiser search outside the home octave for the closest permitted note
 - Give quantiser some pre-set scales (maybe choose with joystick up/down)

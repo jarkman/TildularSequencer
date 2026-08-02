@@ -21,7 +21,7 @@ class Sequencer():
     beatInterval = 0.5 #seconds
     beat = 0
     numBeats = 4
-    maxBeats = 6
+    maxBeats = 12
     sweepPos = 0.0 # float, goes from 0 to numBeats as time goes by
     fractionOfBeat = 0
 
@@ -36,7 +36,7 @@ class Sequencer():
         self.selectedNote = -1
         self.notes = []
         for n in range(self.maxBeats):
-            self.notes.append((3.3 * n)/self.maxBeats) # initialise with an arpeggio
+            self.notes.append(1.0+ n/self.maxBeats) # initialise with an arpeggio
 
         if self.channel == 1:
             self.DACSlot = DACSlots.CV1
@@ -59,25 +59,21 @@ class Sequencer():
         #self.background_update(delta)
 
         #print(repr(self.buttonStates))
+        self.selectedNote = -1
 
-        if TwentyTwentySix.touch_states["TOUCH01"][0]:
-            self.selectedNote = 0
-        elif TwentyTwentySix.touch_states["TOUCH03"][0]:
-            self.selectedNote = 1
-        elif TwentyTwentySix.touch_states["TOUCH05"][0]:
-            self.selectedNote = 2
-        elif TwentyTwentySix.touch_states["TOUCH07"][0]:
-            self.selectedNote = 3
-        elif TwentyTwentySix.touch_states["TOUCH09"][0]:
-            self.selectedNote = 4
-        elif TwentyTwentySix.touch_states["TOUCH11"][0]:
-            self.selectedNote = 5
-        else:
-            self.selectedNote = -1        
+        for i in range(12):
+            touchN = i+1 # count 1-12
+            
+            key = "TOUCH%02d" % (touchN)
 
-        # only use odd-numbered LEDs
+            if TwentyTwentySix.touch_states[key][0] and i < self.numBeats:
+                self.selectedNote = i
+
+        
+
+        
         for i in range(0, 12):
-            if i%2 == 0 and i/2 < self.numBeats:
+            if i < self.numBeats:
                 tildagonos.leds[i+1] = (0, 255, 0) # light up active ones green
             else:
                 tildagonos.leds[i+1] = (0, 0, 0)
@@ -172,27 +168,27 @@ class Sequencer():
         if self.selectedNote >= 0:
             bigBlobSize = 50
         else:
-            bigBlobSize = 20
+            bigBlobSize = 35
 
         dotSize = 2
 
-        for b in range(0,self.maxBeats):
+        for beat in range(0,self.maxBeats):
             r = 255
-            if b == self.selectedNote:
+            if beat == self.selectedNote:
                 #fill
                 size = self.fmap(self.fractionOfBeat, 0.0, 1.0, bigBlobSize*2.0, bigBlobSize*2.0/2.0)
                 r = int(self.fmap(self.fractionOfBeat, 0.0, 1.0, 0, 255))
                 g = 234
                 b = 0
                 fill = True
-            elif b == self.beat:
+            elif beat == self.beat:
                 #fill
                 size = self.fmap(self.fractionOfBeat, 0.0, 1.0, bigBlobSize, bigBlobSize/2.0)
                 r = int(self.fmap(self.fractionOfBeat, 0.0, 1.0, 0, 255))
                 g = 234
                 b = 0
                 fill = True
-            elif b < self.numBeats:
+            elif beat < self.numBeats:
                 #empty
                 size = bigBlobSize/2.0
                 r = int(self.fmap(self.fractionOfBeat, 0.0, 1.0, 0, 255))
@@ -207,26 +203,31 @@ class Sequencer():
                 b = int(self.fmap(self.fractionOfBeat, 0.0, 1.0, 0, 255))
                 fill = False
 
-            if b < self.numBeats:
-                fraction = self.notes[b]/self.sequencerHexpansion.maxVolts
+            if beat < self.numBeats:
+                fraction = self.notes[beat]/self.sequencerHexpansion.maxVolts
                 if fraction < 0.001:
                     fill = False # show non-playing notes as empty
             else:
                 fraction = 0
 
-            theta = self.thetaForBeat(b)
+            
+
+            theta = self.thetaForBeat(beat)
 
             x = blobRadius*math.cos(theta)
             y = blobRadius*math.sin(theta)
             if fill:
                 
-                ctx.rgb(r, g, b).arc(x,y, size, 0, 2 * math.pi, True).fill()
-                ctx.rgb(g,r,b).arc(x,y, size*fraction, 0, 2 * math.pi, True).fill() # and an inner circle to show volts
+                ctx.rgb(r, g, b).arc(x,y, size+2, 0, 2 * math.pi, True).fill()
+                ctx.rgb(r,0,0).arc(x,y, size*fraction, 0, 2 * math.pi, True).fill() # and an inner circle to show volts
             else:
                 ctx.rgb(r,g,b).arc(x,y, size, 0, 2 * math.pi, True).stroke()
 
-        ctx.rgb(1,0,0).move_to(-10,0).text("Ch " + repr(self.channel))
-        ctx.rgb(1,0,0).move_to(-10,30).text(repr(self.numBeats) + " beats")
+        ctx.text_align = ctx.CENTER
+        ctx.rgb(1,0,0)
+        ctx.move_to(0,0).text("Ch " + repr(self.channel))
+        
+        ctx.move_to(0,80).text("<- %d +>"%(self.numBeats))
 
         ctx.restore()
 
