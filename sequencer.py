@@ -225,7 +225,8 @@ class Sequencer():
 
         ctx.text_align = ctx.CENTER
         ctx.rgb(1,0,0)
-        ctx.move_to(0,0).text("Ch " + repr(self.channel))
+        ctx.move_to(0,0).text("Sequencer")
+        ctx.move_to(0,20).text("Ch " + repr(self.channel))
         
         ctx.move_to(0,80).text("<- %d +>"%(self.numBeats))
 

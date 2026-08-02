@@ -39,7 +39,7 @@ class Tilt():
         self.selectedNote = 0
         self.fractionOfBeat = 0
         self.doEnvelope = False
-        self.octave = 0
+    
         self.dirLabel = "---"
 
         self.acc_read = None
@@ -90,7 +90,7 @@ class Tilt():
         volts = fmap(g, -9.81, 9.81, 0, MAX_VOLTS)
 
         volts = self.quantiser.quantise(volts)
-        
+
         self.sequencerHexpansion.writeCV(self.DACSlot, volts)
 
         if self.doEnvelope:
@@ -131,16 +131,16 @@ class Tilt():
         #    ctx.rgb(1, 0, 0).move_to(-80, 0).text("no readings yet")
 
 
-        ctx.rgb(1,0,0).move_to(-30,-20).text("Tilt"+ " " + self.dirLabel)
-        
-        ctx.rgb(1,0,0).move_to(-10,0).text("Ch " + repr(self.channel) )
-        
-        ctx.rgb(1,0,0).move_to(-30,20).text("Octave " + repr(self.octave))
+        ctx.text_align = ctx.CENTER
+        ctx.rgb(1,0,0)
+
+        ctx.move_to(0,0).text("Tilt"+ " " + self.dirLabel)
+        ctx.move_to(0,20).text("Ch " + repr(self.channel))
         
         if self.doEnvelope:
-            ctx.rgb(1,0,0).move_to(-30,60).text("< Bumpy")
+            ctx.rgb(1,0,0).move_to(0,80).text("< Bumpy")
         else:    
-            ctx.rgb(1,0,0).move_to(-30,60).text("Smooth >")
+            ctx.rgb(1,0,0).move_to(0,80).text("Smooth >")
 
         ctx.restore()
 

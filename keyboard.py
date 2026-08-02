@@ -82,7 +82,7 @@ class Keyboard():
             self.selectedNote = newNote
             volts = self.octave + self.selectedNote/12.0
             volts = self.quantiser.quantise(volts)
-            
+
             self.sequencerHexpansion.writeCV(self.DACSlot, volts)
             self.envelope.startEnvelope()
             #self.sequencerHexpansion.startPulse(self.GateSlot)
@@ -115,11 +115,14 @@ class Keyboard():
 
         ctx.save()
         
-        ctx.rgb(1,0,0).move_to(-30,-20).text("Keyboard")
+        ctx.text_align = ctx.CENTER
+        ctx.rgb(1,0,0)
+
+        ctx.move_to(0,0).text("Keyboard")
+        ctx.move_to(0,20).text("Ch " + repr(self.channel))
         
-        ctx.rgb(1,0,0).move_to(-10,0).text("Ch " + repr(self.channel))
-        
-        ctx.rgb(1,0,0).move_to(-30,20).text("Octave " + repr(self.octave))
+        ctx.move_to(0,60).text("Octave")
+        ctx.move_to(0,80).text("<- %d +>"%(self.octave))
 
         ctx.restore()
 

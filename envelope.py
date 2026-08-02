@@ -176,10 +176,11 @@ class Envelope():
         #    ctx.rgb(1, 0, 0).move_to(-80, 0).text("no readings yet")
 
 
-        ctx.rgb(1,0,0).move_to(-30,-20).text("Envelope")
+        ctx.text_align = ctx.CENTER
+        ctx.rgb(1,0,0)
+        ctx.move_to(0,0).text("Envelope")
+        ctx.move_to(0,20).text("Ch " + repr(self.channel))
         
-        ctx.rgb(1,0,0).move_to(-10,0).text("Ch " + repr(self.channel))
-      
         ctx.restore()
 
         

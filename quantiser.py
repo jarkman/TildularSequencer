@@ -102,15 +102,17 @@ class Quantiser():
         
 
         ctx.save()
+
+        ctx.text_align = ctx.CENTER
+        ctx.rgb(1,0,0)
+        ctx.move_to(0,0).text("Quantiser")
+        ctx.move_to(0,20).text("Ch " + repr(self.channel))
         
-        ctx.rgb(1,0,0).move_to(-30,-20).text("Quantiser")
-        
-        ctx.rgb(1,0,0).move_to(-10,0).text("Ch " + repr(self.channel))
         
         if self.doQuantise:
-            ctx.rgb(1,0,0).move_to(-30,60).text("< Quantised")
+            ctx.rgb(1,0,0).move_to(0,80).text("< Quantised")
         else:    
-            ctx.rgb(1,0,0).move_to(-30,60).text("Free >")
+            ctx.rgb(1,0,0).move_to(0, 80).text("Free >")
         
         ctx.restore()
 
