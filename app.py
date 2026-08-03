@@ -21,7 +21,6 @@ from .quantiser import Quantiser
 from .clock import Clock
 from .turing import Turing
 
-vbggftqwa
 # to simulate, 
 # cd C:\Tildagon\badge-2024-software\sim
 # pipenv run python run.py
@@ -72,6 +71,8 @@ class TildularSequencer(app.App):
         # default colour spinny thing
         eventbus.emit(PatternDisable())
         tildagonos.set_led_power(True)
+
+        self.fontSize = 25
 
         self.sequencerHexpansion = SequencerHexpansion()
 

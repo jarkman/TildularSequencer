@@ -177,7 +177,8 @@ class Envelope():
 
 
         ctx.text_align = ctx.CENTER
-        ctx.rgb(1,0,0)
+        ctx.gray(1)
+        ctx.font_size = self.app.fontSize
         ctx.move_to(0,0).text("Envelope")
         ctx.move_to(0,20).text("Ch " + repr(self.channel))
         

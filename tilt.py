@@ -132,15 +132,16 @@ class Tilt():
 
 
         ctx.text_align = ctx.CENTER
-        ctx.rgb(1,0,0)
+        ctx.gray(1)
+        ctx.font_size = self.app.fontSize
 
         ctx.move_to(0,0).text("Tilt"+ " " + self.dirLabel)
         ctx.move_to(0,20).text("Ch " + repr(self.channel))
         
         if self.doEnvelope:
-            ctx.rgb(1,0,0).move_to(0,80).text("< Bumpy")
+            ctx.move_to(0,80).text("< Bumpy")
         else:    
-            ctx.rgb(1,0,0).move_to(0,80).text("Smooth >")
+            ctx.move_to(0,80).text("Smooth >")
 
         ctx.restore()
 

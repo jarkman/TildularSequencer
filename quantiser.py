@@ -104,9 +104,11 @@ class Quantiser():
         ctx.save()
 
 
-
+        ctx.font_size = self.app.fontSize * 0.6
         ctx.text_align = ctx.CENTER
-        ctx.rgb(1,0,0)
+        ctx.text_baseline = ctx.MIDDLE
+        
+        radius = 120 - ctx.font_size
 
         noteNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
 
@@ -115,19 +117,27 @@ class Quantiser():
             theta = theta - math.pi/2.0 # put 0 at the top
             theta = theta  + (2.0*math.pi)/24.0 # align with the touchpads
         
-            x = 90*math.cos(theta)
-            y = 90*math.sin(theta)
+            x = radius*math.cos(theta)
+            y = radius*math.sin(theta)
+
+            if self.noteEnable[note]:
+                ctx.rgb(0, 255, 0)
+            else:
+                ctx.rgb(255,0,0)
 
             ctx.move_to(x,y).text(noteNames[note])
 
+        ctx.text_baseline = ctx.ALPHABETIC
+        ctx.font_size = self.app.fontSize
+        ctx.gray(1)
         ctx.move_to(0,0).text("Quantiser")
-        ctx.move_to(0,20).text("Ch " + repr(self.channel))
+        ctx.move_to(0,ctx.font_size).text("Ch " + repr(self.channel))
         
         
         if self.doQuantise:
-            ctx.rgb(1,0,0).move_to(0,80).text("< Quantised")
+            ctx.move_to(0,80).text("< Quantised")
         else:    
-            ctx.rgb(1,0,0).move_to(0, 80).text("Free >")
+            ctx.move_to(0, 80).text("Free >")
         
         ctx.restore()
 

@@ -116,7 +116,9 @@ class Keyboard():
         ctx.save()
         
         ctx.text_align = ctx.CENTER
-        ctx.rgb(1,0,0)
+        ctx.font_size = self.app.fontSize
+
+        ctx.gray(1)
 
         ctx.move_to(0,0).text("Keyboard")
         ctx.move_to(0,20).text("Ch " + repr(self.channel))
