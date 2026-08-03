@@ -166,14 +166,15 @@ class TildularSequencer(app.App):
         self.menuActive = False
 
     def back_handler(self):
-        #print("back handler")
+        print("app back handler")
 
         if self.menuActive:
+            print("app back handler minimising")
             self.minimise()
 
         self.menuActive = False
 
-    # apparently not called when app is minimised?
+    
     def background_update(self, delta):
 
         #print("app background update")
@@ -207,10 +208,10 @@ class TildularSequencer(app.App):
             if self.button_states.get(BUTTON_TYPES["CANCEL"]):
                 self.button_states.clear()
                 if self.menuActive:
-                    #print("cancel minimising")
+                    print("app cancel minimising")
                     self.minimise() 
                 else:
-                    #print("cancel showing menu")
+                    print("app cancel showing menu")
                     self.menuActive = True
 
             

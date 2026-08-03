@@ -103,6 +103,7 @@ class Quantiser():
 
         ctx.save()
 
+        ctx.gray(1)
 
         ctx.font_size = self.app.fontSize * 0.6
         ctx.text_align = ctx.CENTER
@@ -120,12 +121,13 @@ class Quantiser():
             x = radius*math.cos(theta)
             y = radius*math.sin(theta)
 
-            if self.noteEnable[note]:
-                ctx.rgb(0, 255, 0)
-            else:
-                ctx.rgb(255,0,0)
-
+            
+            ctx.font_size = self.app.fontSize * 0.6
             ctx.move_to(x,y).text(noteNames[note])
+
+            if not self.noteEnable[note]:
+                ctx.font_size = self.app.fontSize
+                ctx.move_to(x,y).text("X")
 
         ctx.text_baseline = ctx.ALPHABETIC
         ctx.font_size = self.app.fontSize

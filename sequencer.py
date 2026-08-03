@@ -53,6 +53,7 @@ class Sequencer():
         if JOYSTICK_BUTTON_TYPES["RIGHT"] in event.button:
             self.numBeats = min(self.numBeats+1, self.maxBeats)
 
+
     def update(self, delta):
         #self.updateLEDs()
 
