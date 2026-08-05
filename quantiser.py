@@ -92,43 +92,17 @@ class Quantiser():
         # quantiser has nothing to do in the background
         return
     
-        
-       
-
     
-
     
     def draw(self, ctx):
         
 
         ctx.save()
 
-        ctx.gray(1)
+        self.app.drawNotes(ctx, self.noteEnable, None)
 
-        ctx.font_size = self.app.fontSize * 0.6
-        ctx.text_align = ctx.CENTER
-        ctx.text_baseline = ctx.MIDDLE
-        
-        radius = 120 - ctx.font_size
 
-        noteNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
-
-        for note in range(12):
-            theta = 2.0*math.pi*note/12.0
-            theta = theta - math.pi/2.0 # put 0 at the top
-            theta = theta  + (2.0*math.pi)/24.0 # align with the touchpads
-        
-            x = radius*math.cos(theta)
-            y = radius*math.sin(theta)
-
-            
-            ctx.font_size = self.app.fontSize * 0.6
-            ctx.move_to(x,y).text(noteNames[note])
-
-            if not self.noteEnable[note]:
-                ctx.font_size = self.app.fontSize
-                ctx.move_to(x,y).text("X")
-
+       
         ctx.text_baseline = ctx.ALPHABETIC
         ctx.font_size = self.app.fontSize
         ctx.gray(1)

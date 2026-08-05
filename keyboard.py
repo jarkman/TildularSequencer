@@ -40,6 +40,7 @@ class Keyboard():
             self.DACSlot = DACSlots.CV2
             self.GateSlot = DACSlots.Gate2
         
+        
     def buttonDownHandler(self, event):
 
         play = False
@@ -78,6 +79,7 @@ class Keyboard():
             play = True
 
         if play:
+
             print("started keyboard note %d"%(newNote))
             self.selectedNote = newNote
             volts = self.octave + self.selectedNote/12.0
@@ -96,6 +98,7 @@ class Keyboard():
         tildagonos.leds[self.selectedNote+1] = (0,255,0) 
         tildagonos.leds.write()
 
+
         return True
     
         
@@ -113,8 +116,16 @@ class Keyboard():
     def draw(self, ctx):
         
 
+        
+        
         ctx.save()
         
+        big = [False]*12
+        big[self.selectedNote] = True
+        
+        self.app.drawNotes(ctx, None, big)
+
+
         ctx.text_align = ctx.CENTER
         ctx.font_size = self.app.fontSize
 

@@ -113,6 +113,8 @@ class TildularSequencer(app.App):
         )
 
         eventbus.on_async(ButtonDownEvent, self.buttonDownHandler, self)
+
+
        
     async def buttonDownHandler(self, event):
 
@@ -193,7 +195,7 @@ class TildularSequencer(app.App):
     
     def background_update(self, delta):
 
-        #print("app background update")
+        #print("app background update %f"%(delta))
 
         now = time.time() * 1000.0
 
@@ -203,7 +205,7 @@ class TildularSequencer(app.App):
         
         self.clock.background_update(delta)
 
-        self.sequencerHexpansion.update(delta)
+        self.sequencerHexpansion.background_update(delta)
 
         
         self.activeMode1.background_update(delta)
@@ -222,18 +224,15 @@ class TildularSequencer(app.App):
 
             if self.button_states.get(BUTTON_TYPES["CANCEL"]):
                 self.button_states.clear()
-                print("app cancel minimising 1")
+                print("app cancel minimising")
                 self.minimise() 
             
         else:
             if self.button_states.get(BUTTON_TYPES["CANCEL"]):
                 self.button_states.clear()
-                if self.menuActive:
-                    print("app cancel minimising 2")
-                    self.minimise() 
-                else:
-                    print("app cancel showing menu")
-                    self.menuActive = True
+
+                print("app cancel showing menu")
+                self.menuActive = True
 
             
             self.uiMode.update(delta)
@@ -265,7 +264,48 @@ class TildularSequencer(app.App):
         ctx.restore()    
         
 
+    # used in keyboard and quantiser
+    def drawNotes(self, ctx, enable, big):
         
+       
+        ctx.save()
+
+        ctx.gray(1)
+
+        ctx.font_size = self.fontSize * 0.6
+        ctx.text_align = ctx.CENTER
+        ctx.text_baseline = ctx.MIDDLE
+        
+        radius = 120 - ctx.font_size
+
+        noteNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
+
+        for note in range(12):
+            theta = 2.0*math.pi*note/12.0
+            theta = theta - math.pi/2.0 # put 0 at the top
+            theta = theta  + (2.0*math.pi)/24.0 # align with the touchpads
+        
+            x = radius*math.cos(theta)
+            y = radius*math.sin(theta)
+
+            
+            ctx.font_size = self.fontSize * 0.6
+
+            if big is not None and big[note]:
+                ctx.font_size = self.fontSize * 1.2
+
+            ctx.gray(1)
+            ctx.move_to(x,y).text(noteNames[note])
+
+            #print("note %d X%d Y%d <%s>"%(note,x,y,noteNames[note]))
+
+            if enable is not None and not enable[note]:
+                ctx.gray(1)
+                ctx.font_size = self.fontSize
+                ctx.move_to(x,y).text("X")
+    
+
+        ctx.restore        
 
 def fmap(self, f, fMin, fMax, oMin, oMax):
     return( oMin + (oMax-oMin)*(f-fMin)/(fMax-fMin))

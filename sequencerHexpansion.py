@@ -223,7 +223,7 @@ class SequencerHexpansion():
         self.adc_found = ADS1015_ADDR in addresses
         self.dac_addr = find_dac_addr(addresses)
 
-    def update(self, delta):
+    def background_update(self, delta):
         
         now = ticks_ms()
 
@@ -236,6 +236,7 @@ class SequencerHexpansion():
             return
 
         self.endPulses()
+
 
         #if self.dac_addr is not None:
          #   self.update_dac(now)
