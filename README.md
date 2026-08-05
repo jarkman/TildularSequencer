@@ -17,6 +17,7 @@ It's not done yet.
 TODO
 
 
+- can't quit app
 - Make quantiser search outside the home octave for the closest permitted note
 - Give quantiser some pre-set scales (maybe choose with joystick up/down)
 - Give quantiser an informative display of some sort about what note it is bending
