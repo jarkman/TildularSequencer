@@ -137,6 +137,7 @@ class Sequencer():
     def thetaForBeat(self, b):
         theta = 2.0*math.pi*b/self.maxBeats
         theta = theta - math.pi/2.0 # put 0 at the top
+        theta = theta + 2*math.pi/24 # to line up with the LEDs
         return theta
     
     def fmap(self, f, fMin, fMax, oMin, oMax):

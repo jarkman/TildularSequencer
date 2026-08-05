@@ -16,6 +16,8 @@ It's not done yet.
 
 TODO
 
+- move sequencer round 1/2 note to line up with the LEDs
+- add a start/stop with the unusued buttons?
 - add note nums to keyboard
 - make clock adjustment nicer
 - Make quantiser search outside the home octave for the closest permitted note
