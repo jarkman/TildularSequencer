@@ -166,7 +166,8 @@ class TildularSequencer(app.App):
         self.menuActive = False
 
     def back_handler(self):
-        print("app back handler")
+        #print("app back handler")
+        return # this work is done in update()
 
         if self.menuActive:
             print("app back handler minimising")
