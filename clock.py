@@ -65,7 +65,7 @@ class Clock():
     
     def draw(self, ctx):
         
-        print("draw clock")
+        #print("draw clock")
 
         ctx.save()
 

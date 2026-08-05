@@ -300,7 +300,7 @@ class TildularSequencer(app.App):
             #print("note %d X%d Y%d <%s>"%(note,x,y,noteNames[note]))
 
             if enable is not None and not enable[note]:
-                ctx.gray(1)
+                ctx.rgb(1,0,0)
                 ctx.font_size = self.fontSize
                 ctx.move_to(x,y).text("X")
     

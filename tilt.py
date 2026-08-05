@@ -36,7 +36,7 @@ class Tilt():
         self.envelope = envelope
         self.quantiser = quantiser
 
-        self.selectedNote = 0
+        self.volts = 0
         self.fractionOfBeat = 0
         self.doEnvelope = False
     
@@ -64,12 +64,18 @@ class Tilt():
     def update(self, delta):
         
         
-        
-        #for i in range(0, 12):
-        #    tildagonos.leds[i+1] = (0, 0, 255)
+        for i in range(0, 12):
+            tildagonos.leds[i+1] = (0, 0, 255)
 
-        #tildagonos.leds[self.selectedNote+1] = (0,255,0) 
-        #tildagonos.leds.write()
+        note = int(12.0 * (self.volts%1.0))
+        
+        if note > 11:
+            note = 11
+
+        print("tilt update %f"%(note))
+        
+        tildagonos.leds[note+1] = (0,255,0) 
+        tildagonos.leds.write()
 
         return True
     
@@ -87,11 +93,11 @@ class Tilt():
             g = self.acc_read[1]
             
 
-        volts = fmap(g, -9.81, 9.81, 0, MAX_VOLTS)
+        self.volts = fmap(g, -9.81, 9.81, 0, MAX_VOLTS)
 
-        volts = self.quantiser.quantise(volts)
+        self.volts = self.quantiser.quantise(self.volts)
 
-        self.sequencerHexpansion.writeCV(self.DACSlot, volts)
+        self.sequencerHexpansion.writeCV(self.DACSlot, self.volts)
 
         if self.doEnvelope:
             oldF = self.fractionOfBeat

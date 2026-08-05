@@ -25,12 +25,17 @@ class Quantiser():
         self.buttonStates = buttonStates
         self.noteEnable = [True]*12 # the notes we are preapred to accept
         self.doQuantise = False
+
+        self.currentInput = None
+        self.currentOutput = None
         
 
     def quantise(self, volts):
         
         #print("quantiser in %f"%(volts))
 
+        self.currentInput = volts
+        self.currentOutput = volts
         if not self.doQuantise:
             return volts
         
@@ -50,6 +55,7 @@ class Quantiser():
         if bestV > -1:
             #print("quantiser out %f"%(octave+bestV))
         
+            self.currentOutput = octave+bestV
             return octave+bestV
         
         #print("quantiser - no note!")
@@ -101,8 +107,38 @@ class Quantiser():
 
         self.app.drawNotes(ctx, self.noteEnable, None)
 
+        # draw a line to show the mapping we're doing
+        if self.currentInput is not None and self.currentOutput is not None:
 
+            radiusInput = 40
+            inNote = self.currentInput%1.0
+            thetaInput = 2.0*math.pi*inNote
+            thetaInput = thetaInput - math.pi/2.0 # put 0 at the top
+            thetaInput = thetaInput  + (2.0*math.pi)/24.0 # align with the touchpads
+
+
+            radiusOutput = 100
+            outNote = self.currentOutput%1.0
+            thetaOutput = 2.0*math.pi*outNote
+            thetaOutput = thetaOutput - math.pi/2.0 # put 0 at the top
+            thetaOutput = thetaOutput  + (2.0*math.pi)/24.0 # align with the touchpads
+            
+            radiusMid = 80
+
+            xInput = radiusInput*math.cos(thetaInput)
+            yInput = radiusInput*math.sin(thetaInput)
+            
+            xMid = radiusMid*math.cos(thetaInput)
+            yMid = radiusMid*math.sin(thetaInput)
+
+            xOutput = radiusOutput*math.cos(thetaOutput)
+            yOutput = radiusOutput*math.sin(thetaOutput)
+
+            ctx.rgb(0.3,0.3,1.0)
+            ctx.move_to(xInput,yInput).line_to(xMid,yMid).line_to(xOutput,yOutput)
+            ctx.stroke()
        
+        ctx.text_align = ctx.CENTER
         ctx.text_baseline = ctx.ALPHABETIC
         ctx.font_size = self.app.fontSize
         ctx.gray(1)
