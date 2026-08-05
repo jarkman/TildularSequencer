@@ -102,6 +102,9 @@ class TildularSequencer(app.App):
 
         self.lastBackgroundUpdate = time.time() * 1000
 
+        # used to show activity in menu
+        self.activeModes = [None, self.sequencer1, self.sequencer2, self.keyboard1, self.keyboard2, self.tilt1, self.tilt2]
+
         self.menu = Menu(
             self,
             main_menu_items,
@@ -121,7 +124,7 @@ class TildularSequencer(app.App):
             #print("app button forwarding to " + repr(self.uiMode))
             self.uiMode.buttonDownHandler(event)
         else:
-            print("... ignoring, menu up")
+            pass #print("... ignoring, menu up")
 
     def select_handler(self, item, idx):
 
@@ -164,6 +167,18 @@ class TildularSequencer(app.App):
        
         self.button_states.clear()
         self.menuActive = False
+
+        if False: 
+            # doesn't work well, not sure why
+            prefix = "*"
+
+            # mark the active modes
+            for m in range(1, len(self.activeModes)):
+                s = main_menu_items[m]
+                if s.startswith(prefix):
+                    s = s[len(prefix):]
+                if self.activeMode1 is self.activeModes[m] or self.activeMode2 is self.activeModes[m]:
+                    main_menu_items[m] = prefix + s
 
     def back_handler(self):
         #print("app back handler")

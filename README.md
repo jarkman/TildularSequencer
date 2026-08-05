@@ -17,12 +17,11 @@ It's not done yet.
 TODO
 
 
-- Something's up with back button handling, you can sometime leave the app when you didn't expect to
-- Show which modes are active in the menu
 - Make quantiser search outside the home octave for the closest permitted note
 - Give quantiser some pre-set scales (maybe choose with joystick up/down)
 - Give quantiser an informative display of some sort about what note it is bending
 - Make a Turing-alike generator
+- fix keyboard latency
 - Save and restore all settings
 - Flash the EEPROM and have it start when the module is plugged in
 - Extend sequencer to multiple screens, navigating with the joystick
