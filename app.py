@@ -219,12 +219,17 @@ class TildularSequencer(app.App):
         if self.menuActive:
             #print("update menu")
             self.menu.update(delta)
+
+            if self.button_states.get(BUTTON_TYPES["CANCEL"]):
+                self.button_states.clear()
+                print("app cancel minimising 1")
+                self.minimise() 
             
         else:
             if self.button_states.get(BUTTON_TYPES["CANCEL"]):
                 self.button_states.clear()
                 if self.menuActive:
-                    print("app cancel minimising")
+                    print("app cancel minimising 2")
                     self.minimise() 
                 else:
                     print("app cancel showing menu")
